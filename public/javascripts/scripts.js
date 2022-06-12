@@ -15,6 +15,7 @@ if (document.querySelector('#new-pet')) {
                 window.location.replace(`/pets/${response.data.pet._id}`);
             })
             .catch(function (error) {
+                console.log(error);
                 const alert = document.getElementById('alert')
                 alert.classList.add('alert-warning');
                 alert.textContent = 'Oops, something went wrong saving your pet. Please check your information and try again.';

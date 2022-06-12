@@ -43,8 +43,14 @@ module.exports = (app) => {
   app.post('/pets', upload.single('avatar'), (req, res, next) => {
     // console.log(req.file);
     var pet = new Pet(req.body);
-    pet.save(function (err) {
-      if (req.file) {
+
+    // pet.save(function (err) {
+    //   if (err) {
+    //     return res.status(400).send({ err: err }) 
+    //   }
+    // })  
+
+    if (req.file) {
         // Upload the images
         client.upload(req.file.path, {}, function (err, versions, meta) {
           if (err) { 
@@ -58,15 +64,26 @@ module.exports = (app) => {
             urlArray.pop();
             var url = urlArray.join('-');
             pet.avatarUrl = url;
-            pet.save();
           });
+          
+          pet.save(function (err) {
+            if (err) {
+              return res.status(400).send({ err: err }) 
+            }
 
-          res.send({ pet: pet });
+            console.log(pet)
+            res.send({ pet: pet });
+          })  
         });
       } else {
+        pet.save(function (err) {
+          if (err) {
+            return res.status(400).send({ err: err }) 
+          }
+        })  
         res.send({ pet: pet });
       }
-    })
+    
   })
 
   // SHOW PET
